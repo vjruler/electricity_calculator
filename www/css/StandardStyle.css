@@ -340,7 +340,7 @@ table{ margin-left:auto;
 /* ****
  * END.
 */
-/*
+
 @media only screen and (max-width: 768px) {
    
     table{ margin-left:auto; 
@@ -354,4 +354,4 @@ table{ margin-left:auto;
 	input[type="text"],.device_name{
     width: 70px!important;
 	}
-}*/
+}
