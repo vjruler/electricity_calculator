@@ -1,0 +1,357 @@
+/* *****************
+ * BODY TEXT STYLES.
+*/
+
+body
+{
+    font-family: arial;
+    color: navy;
+}
+
+h1
+{
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+}
+
+h2
+{
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+}
+
+h3
+{
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+}
+
+h4
+{
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+}
+
+h5
+{
+    font-size: 13px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+}
+
+/* ******************
+ * HYPER-LINK STYLES.
+*/
+
+a:link
+{
+    color: blue;
+}
+
+a:visited
+{
+    color: purple;
+}
+
+a:hover
+{
+    color: red;
+}
+
+/* *********************
+ * MENU SUBTITLE STYLES.
+*/
+
+span#menu_subtitle
+{
+    margin-top: 0.40em;
+    font-size: 14px;
+    font-style: italic;
+    color: Gray;
+    display: block;
+}
+
+/* *******************
+ * IMAGE TABLE STYLES.
+*/
+
+div.thumbnail
+{
+    text-align: center;
+    padding: 15px 10px 5px 10px;
+    cursor: pointer;
+    background-color: RGB(225, 225, 225);
+}
+
+div.thumbnail_selected
+{
+    text-align: center;
+    padding: 15px 10px 5px 10px;
+    cursor: pointer;
+    background-color: RGB(150, 150, 150);
+}
+
+div#image_browser_container
+{
+    /* Because the ImageBrowser is always displayed side-by-side with a Snapshot image
+       of fixed size, we can make assumptions about what size the ImageBrowser should be.
+    */
+    height: 750px;
+    width: 250px;
+    overflow: auto;
+}
+
+table.image_table caption
+{
+    font-weight: normal;
+    font-style: italic;
+    text-align: right;
+}
+
+/* *********************
+ * ARTICLES PAGE STYLES.
+*/
+
+div.article_link
+{
+    border: 1px solid navy;
+    padding: 10px;
+    width: 50%;
+    min-width: 500px;
+    background-color: RGB(245, 245, 245);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ************************
+ * CALCULATOR INDEX STYLES.
+*/
+
+div.calculator
+{
+    border: 1px solid navy;
+    padding: 10px;
+    width: 60%;
+    min-width: 500px;
+    background-color: RGB(245, 245, 245);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+}
+
+table#calculator_menu
+{
+    width: 100%;
+}
+
+td.unselected_category
+{
+    border: 1px solid navy;
+    background-color: RGB(245, 245, 245);
+    cursor: pointer;
+    margin: 5px;
+    width: 15%;
+    text-align: center;
+}
+
+td.selected_category
+{
+    border: 1px solid navy;
+    background-color: RGB(200, 200, 200);
+    cursor: pointer;
+    margin: 5px;
+    width: 15%;
+    text-align: center;
+}
+
+div#calculator_closer
+{
+    text-align: center;
+    border: 1px solid navy;
+    background-color: RGB(245, 245, 245);
+    padding: 5px;
+}
+
+input#do_search
+{
+    width: 100px;
+}
+
+input#search_input
+{
+    width: 300px;
+}
+
+/* ******************
+ * CALCULATOR STYLES.
+*/
+
+input[type="submit"]
+{
+    width: 100px;
+}
+
+input[type="text"]
+{
+    width: 100px;
+}
+
+div.calculator_preamble
+{
+    font-size: 13px;
+    font-weight: normal;
+    text-align: right;
+}
+
+div.calculator_comment
+{
+    font-size: 13px;
+    font-weight: normal;
+    max-width: 350px;
+    white-space: normal;
+}
+
+div.long_calculator_comment
+{
+    font-size: 13px;
+    font-weight: normal;
+    white-space: normal;
+}
+
+div.user_input_validation_comment
+{
+    font-size: 14px;
+    font-weight: normal;
+    color: red;
+    max-width: 350px;
+    white-space: normal;
+}
+
+div.long_user_input_validation_comment
+{
+    font-size: 14px;
+    font-weight: normal;
+    color: red;
+    max-width: 650px;
+    white-space: normal;
+}
+
+table.calculator_instructions
+{
+    text-align: left;
+    max-width: 75%;
+    display: inline-block;
+}
+
+table.calculator_table
+{
+    text-align: left;
+    border-spacing: 25px 25px;
+}
+
+table.calculator_table tr td
+{
+    border: 1px solid navy;
+    padding: 20px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+table.calculator_table tr td.vcenter
+{
+    border: 1px solid navy;
+    padding: 20px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+table.nested_calculator_table
+{
+    text-align: left;
+    width: 100%;
+    border-spacing: 0px 0px;
+}
+
+table.nested_calculator_table tr td
+{
+    width: 50%;
+    border: none;
+    padding: 5px 10px 5px 10px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+table.calculator_reference_table
+{
+    text-align: left;
+    border-spacing: 0px 0px;
+}
+
+table.calculator_reference_table tr td
+{
+    font-size: 12px;
+    font-family: Consolas;
+    border: 1px solid navy;
+    padding: 5px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+table.calculator_reference_table tr th
+{
+    font-size: 12px;
+    font-family: Consolas;
+    font-weight: bold;
+    border: 1px solid navy;
+    padding: 5px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+/* *****************************
+ * 90 GALLON REEF ARTICLE STYLES
+*/
+
+table#my_90_gallon_reef_menu
+{
+    width: 100%;
+    margin-bottom: 5px;
+}
+table#my_90_gallon_reef_menu tr td
+{
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    width: 25%;
+    background-color: RGB(245, 245, 245);
+    border: 1px solid navy;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+img{cursor:pointer;}
+table{ margin-left:auto; 
+    margin-right:auto;}
+.device_name{width:200px!important;}
+
+/* ****
+ * END.
+*/
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    table{ margin-left:auto; 
+    margin-right:auto;}
+	table h3,span{font-size:11px;}
+	h1{font-size:15px;}
+	table.calculator_table tr td 
+	{
+    padding: 5px;
+	}
+	input[type="text"],.device_name{
+    width: 70px!important;
+	}
+}

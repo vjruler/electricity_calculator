@@ -1,0 +1,414 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <!-- Head information. -->
+
+    <head>
+
+        <title>Electrical Consumption Calculator</title>
+       <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+        <!-- Include the stylesheet. -->
+        <link   type="text/css"
+                href="css/StandardStyle.css"
+                rel="stylesheet" />
+        <script type="text/javascript" src="cordova.js"></script>
+        <!-- Include some javascript utility functions. -->
+        <script type="text/javascript"
+                src="js/StandardUtilities.js">
+        </script>
+
+                        
+        <!-- Javascript to manage the adding/removing of rows. -->
+        <script type="text/javascript">
+
+            // The next available row index.
+            var NEXT_AVAILABLE_INDEX = 1;
+
+            // This function adds a new row.
+            function AddRow()
+            {
+                // Determine the row name.
+                var row_name = "inputrow_" + NEXT_AVAILABLE_INDEX;
+                NEXT_AVAILABLE_INDEX++;
+
+                // Get the table and add a row.
+                var table = document.getElementById("input_table");
+                var newrow = table.insertRow(table.rows.length);
+                newrow.id = row_name;
+
+                // Determine the name for the row elements.
+                var row_name_input = row_name + "_name";
+                var row_watt_input = row_name + "_watt";
+                var row_time_input = row_name + "_time";
+
+                // Set the HTML for the new row.
+                newrow.insertCell(0).innerHTML = "<h3><input type='text' class='device_name' id='" + row_name_input + "' /></h3>";
+                newrow.insertCell(1).innerHTML = "<h3><input type='text' class='RowWattInput' onkeypress='validate(event)' id='" + row_watt_input + "' value='0' onchange='Summarize();' /></h3>";
+                newrow.insertCell(2).innerHTML = "<h3><input type='text' id='" + row_time_input + "' value='0' onchange='Summarize();' onkeypress='validate(event)' /></h3>";
+                newrow.insertCell(3).innerHTML = "<img src='img/remove.png' onclick='RemoveRow(\"" + row_name + "\")'  />";
+            }
+
+            // This function removes a given row.
+            function RemoveRow(row_id)
+            {
+                // Get the table and remove the row.
+                if (document.getElementById(row_id) != null)
+                {
+                    var table = document.getElementById("input_table");
+                    var row   = document.getElementById(row_id);
+
+                    table.tBodies[0].removeChild(row);
+                }
+            }
+
+			function validate(evt) {
+			  var theEvent = evt || window.event;
+			  var key = theEvent.keyCode || theEvent.which;
+			   if( key == 8 || key == 46 || key == 9 || key == 37 || key == 38 || key == 39 || key == 40)
+				{
+					return true;
+				}
+			  key = String.fromCharCode( key );
+			  var regex = /[0-9]|\./;
+			  if( !regex.test(key) ) {
+				theEvent.returnValue = false;
+				if(theEvent.preventDefault) theEvent.preventDefault();
+			  }
+			}
+            // This function summarizes the dynamic table into the hidden control and
+            // records the users input so that it can be displayed when the page reloads.
+            function Summarize()
+            {
+                // Hold the average consumption...
+                var avgConsumption = 0;
+
+                // Hold all the input.
+                var allInput = "";
+				
+				var cost =document.getElementById('cost').value;
+				
+				var total_cost =0;
+				
+				var cheapest_cost=0;
+				var e = document.getElementById("result_consumption_time_unit");
+				var per_consumbtion = e.options[e.selectedIndex].value;
+				var e = document.getElementById("result_cost_time_unit");
+				var per_cost= e.options[e.selectedIndex].value;
+				var e = document.getElementById("cheapest_cost_time_unit");
+				var per_cheapest_cost= e.options[e.selectedIndex].value;
+                // Loop through all the inputs...
+                var inputArray = document.getElementsByTagName("INPUT");
+                for (var i = 0; i < inputArray.length; i++)
+                {
+                    // If this is a "RowWattInput" input...
+                    if (inputArray[i].className == "RowWattInput")
+                    {
+                        // Find the matching inputs...
+                        var timeInput = document.getElementById( inputArray[i].id.replace("watt", "time") );
+                        var nameInput = document.getElementById( inputArray[i].id.replace("watt", "name") );
+
+                        // Add this watts x time to the average consumption.
+                        var watts = parseFloat(inputArray[i].value);
+                        var time = parseFloat(timeInput.value);
+                        var name = nameInput.value.replace("@", "at");
+
+                        // Sanity checks.
+                        if (watts < 0)
+                            watts = 0;
+                        if (time < 0)
+                            time = 0;
+                        if (time > 24)
+                            time = 24;
+
+                        // Update the average consumption.
+                        //avgConsumption += watts * (time / 24.0);
+						avgConsumption =   (time * watts * per_consumbtion /1000) + avgConsumption ;
+						
+						total_cost = ((time * watts *  cost * per_cost /1000)/100 ) + total_cost;
+						
+						cheapest_cost = ((time * watts * 11 * per_cheapest_cost /1000)/100 ) + cheapest_cost;
+
+                        // Save this row.
+                        allInput += name + "@" + watts + "@" + time + "@@";
+                    }
+                }
+
+                // Update the average consumption.
+                document.getElementById("result_consumption").value = Math.round(avgConsumption *10000000000) / 10000000000;
+                document.getElementById("result_cost").value = Math.round(total_cost *10000000000) / 10000000000 ;
+				document.getElementById("cheapest_cost").value = Math.round(cheapest_cost *10000000000) / 10000000000;
+                
+				
+				
+				
+				
+				// Store the history.
+                document.getElementById("input_history").value = allInput;
+				
+				
+				
+				return true;
+            }
+
+        </script>
+
+        <meta name='msapplication-config' content='none'/>
+<link rel='apple-touch-icon' href='/favicon.png'>
+<link rel='icon' type='image/png' href='/favicon.png'>
+
+    </head>
+
+    <!-- Body information -->
+
+    <body>
+
+        <h4 align='right'>
+   <!-- <a href='/' onmouseover='show_menu_subtitle("The front page of Hamzas Reef.")' onmouseout='hide_menu_subtitle()'>Home</a>
+|
+    <a href='/Contents/Articles/' onmouseover='show_menu_subtitle("Articles and reviews that I have written.")' onmouseout='hide_menu_subtitle()'>Articles</a>
+|
+    <a href='/Contents/Calculators/' onmouseover='show_menu_subtitle("An index of my aquarium calculators.")' onmouseout='hide_menu_subtitle()'>Calculators</a>
+|
+    <a href='/Contents/Snapshots/' onmouseover='show_menu_subtitle("History of the images that have been on my front page.")' onmouseout='hide_menu_subtitle()'>Snapshots</a>
+|
+    <a href='/Contents/Links/' onmouseover='show_menu_subtitle("A collection of useful links I have gathered over time.")' onmouseout='hide_menu_subtitle()'>Links</a>
+    <br />    <span id='menu_subtitle'>&nbsp;</span>--><br /> 
+</h4>
+
+        <!-- Draw the title of the page. -->
+        <h1 align='center'>
+            Electrical Consumption Calculator<br />
+        </h1>
+
+        <!-- Display a warning to the user if javascript is disabled. -->
+        <script type="text/javascript"></script>
+        <noscript>
+            <div class="calculator_preamble">
+                * This calculator requires javascript to work correctly.<br />
+            </div>
+        </noscript>
+        <hr />
+
+        <form name="input_form"  method="post" onsubmit="Summarize();return false;">
+            
+                <!-- Calculator. -->
+                <table class="calculator_table">
+                    <tr>
+                        <td>
+                           <h3> Cost of Electricity:</h3><br />
+<input type='text'
+       name='price' id="cost" onchange='Summarize();' onkeypress='validate(event)'
+       value='15'
+/>
+&nbsp;<span>Per kWh</span>
+<br />
+                        </td>
+                    </tr>
+                </table>
+                <br />
+
+                <!-- This dynamically editable table holds all the user input. -->
+                <table id="input_table" cellpadding="10" style="border: solid 1px navy;">
+
+                    <!-- This is the heading row. -->
+                    <tr>
+                        <th><h3>Device Name </h3></h3></th>
+                        <th><h3>Watts Consumed</h3></th>
+                        <th><h3>Hours Used per Day</h3></th>
+                        <th><h3>
+                            <img src="img/add.png" onclick="AddRow()"  />
+                        </h3></th>
+                    </tr>
+
+                    <!-- At the beginning, this table is empty. -->
+
+                </table>
+
+                <!-- This hidden control is filled by Javascript with the average watt consumption. -->
+                <input type="hidden" id="average_consumption" name="average_consumption" value="" />
+
+                <!-- This hidden control is filled by Javascript with all the user entered input from the previous page view. -->
+                <input type="hidden" id="input_history" name="input_history" value="" />
+
+                <!-- Javascript to set up the input table. -->
+                <script type="text/javascript">
+
+                    // Check if there is any history.
+                    var userHistory = document.getElementById("input_history").value;
+                    if (userHistory != "")
+                    {
+                        // If there is history, we should use it to restore the user's previous input.
+                        var history_elements = userHistory.split("@@");
+                        for (var i = 0; i < history_elements.length; i++)
+                        {
+                            if (history_elements[i] != "")
+                            {
+                                // Get the information for the current row.
+                                var current_element = history_elements[i].split("@");
+                                var ld_name = current_element[0];
+                                var ld_watt = current_element[1];
+                                var ld_time = current_element[2];
+
+                                // Compute the names of the elements of this row.
+                                var id_name = "inputrow_" + NEXT_AVAILABLE_INDEX + "_name";
+                                var id_watt = "inputrow_" + NEXT_AVAILABLE_INDEX + "_watt";
+                                var id_time = "inputrow_" + NEXT_AVAILABLE_INDEX + "_time";
+
+                                // Create the row.
+                                AddRow();
+
+                                // Fill the row.
+                                document.getElementById(id_name).value = ld_name;
+                                document.getElementById(id_watt).value = ld_watt;
+                                document.getElementById(id_time).value = ld_time;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Otherwise we should just add one row.
+                        AddRow();
+                    }
+                </script>
+
+
+                <!-- Results. -->
+                   <table class="calculator_table">
+                    <tr>
+                        <td>
+                            
+                             <table class="nested_calculator_table">
+                                 <tr>
+                                    <td>
+                                        <h3>
+                                            <b>Results:</b><br /><br />
+                                        </h3>
+                                    </td>
+
+                                    <td>
+                                        <h3>
+                                            <input type="submit" name="calculate" value="Calculate"/><br /><br />
+                                        </h3>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <h3>
+                                             Consumption:<br />
+<input type='text'
+       name='result_consumption'
+       value='0' id='result_consumption'
+       disabled='disabled'
+/>
+&nbsp;kWh
+<br />
+                                        </h3>
+                                    </td>
+
+                                    <td>
+                                        <h3>
+                                            Per:<br />
+
+<select name='result_consumption_time_unit' id='result_consumption_time_unit' class='time_selector' onchange='Summarize();'>
+   <option value='0.0000115741'>Seconds</option>
+    <option value='0.0006944444'>Minutes</option>
+    <option value='0.0416666667'>Hours</option>
+    <option value='1'>Days</option>
+    <option value='7'>Weeks</option>
+    <option selected='selected' value='30'>Months (30-Day)</option>
+    <option value='365'>Years (365-Day)</option>
+
+</select>
+<br />
+                                        </h3>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                     <td>
+                                        <h3>
+                                             Cost:<br />
+<input type='text'
+       name='result_cost' id='result_cost'
+       value='0'
+       disabled='disabled'
+/>
+&nbsp;
+<br />
+                                        </h3>
+                                    </td>
+
+                                    <td>
+                                        <h3>
+                                            Per:<br />
+
+<select name='result_cost_time_unit' class='time_selector' id='result_cost_time_unit' onchange='Summarize();'>
+    <option value='0.0000115741'>Seconds</option>
+    <option value='0.0006944444'>Minutes</option>
+    <option value='0.0416666667'>Hours</option>
+    <option value='1'>Days</option>
+    <option value='7'>Weeks</option>
+    <option selected='selected' value='30'>Months (30-Day)</option>
+    <option value='365'>Years (365-Day)</option>
+</select>
+<br />
+                                        </h3>
+                                    </td>
+                                </tr>
+
+ <tr>
+                                     <td>
+                                        <h3>
+                                             Cheapest Cost:<br />
+<input type='text' id="cheapest_cost"
+       name='cheapest_cost'
+       value='0'
+       disabled='disabled'
+/>
+&nbsp;
+<br />
+                                        </h3>
+                                    </td>
+
+                                    <td>
+                                        <h3>
+                                            Per:<br />
+
+<select name='cheapest_cost_time_unit' class='time_selector' id='cheapest_cost_time_unit' onchange='Summarize();'>
+    <option value='0.0000115741'>Seconds</option>
+    <option value='0.0006944444'>Minutes</option>
+    <option value='0.0416666667'>Hours</option>
+    <option value='1'>Days</option>
+    <option value='7'>Weeks</option>
+    <option selected='selected' value='30'>Months (30-Day)</option>
+    <option value='365'>Years (365-Day)</option>
+
+</select>
+<br />
+                                        </h3>
+                                    </td>
+                                </tr>
+
+								</table>
+
+                        </td>
+                    </tr>
+                </table>
+
+        </form>
+        <hr />
+
+        <h5 align='center'>
+    <br />
+    Copyright &copy; 2015 <a href="http://www.ikomettech.com">www.ikomettech.com</a>.<br />
+   
+</h5>
+
+    </body>
+</html>
